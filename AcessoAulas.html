@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cadastro - Streamers</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #111;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+  .card {
+    background: #1c1c1c;
+    padding: 40px;
+    border-radius: 12px;
+    text-align: center;
+    width: 320px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  }
+  h2 {
+    margin-bottom: 20px;
+    font-size: 18px;
+  }
+  input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    border: none;
+    box-sizing: border-box;
+  }
+  button {
+    width: 100%;
+    padding: 12px;
+    background: #ff0050;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  #result {
+    margin-top: 15px;
+    font-size: 13px;
+    color: #0f0;
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h2>Qual seu nome de usuário do TikTok?</h2>
+  <input type="text" id="username" placeholder="@seuusuario" required>
+  <button id="btnEntrar" onclick="enviar()">Entrar</button>
+  <div id="result"></div>
+</div>
+
+<script>
+// Substitua pela URL do seu Web App do Apps Script
+const SCRIPT_URL = "https://script.google.com/macros/library/d/114045FFjpiyvfv6i9SD9G6gJZGDGWpXWOsng5w7io75Gfr7gbxjoX3vy/1";
+
+// Substitua pelo link do OneDrive
+const ONEDRIVE_LINK = "https://1drv.ms/f/c/d20ce9b38e910364/IgB7bF2438QYT4LT5a2mHQXaARvNHfk80SobDbBkKPO5MBM?e=d0Ek8w";
+
+function enviar() {
+  const username = document.getElementById("username").value.trim();
+  const btn = document.getElementById("btnEntrar");
+  const result = document.getElementById("result");
+
+  if (!username) {
+    alert("Por favor, preencha seu nome de usuário do TikTok.");
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = "Enviando...";
+
+  fetch(SCRIPT_URL, {
+    method: "POST",
+    body: new URLSearchParams({ username: username })
+  })
+  .then(response => response.json())
+  .then(data => {
+    result.innerHTML = `
+      <strong>Registrado com sucesso!</strong><br>
+      Usuário: ${data.username}<br>
+      Data/Hora: ${data.timestamp}
+    `;
+    setTimeout(() => {
+      window.location.href = ONEDRIVE_LINK;
+    }, 2000);
+  })
+  .catch(error => {
+    console.error("Erro:", error);
+    result.innerHTML = "Erro ao salvar. Tente novamente.";
+    btn.disabled = false;
+    btn.textContent = "Entrar";
+  });
+}
+</script>
+
+</body>
+</html>
